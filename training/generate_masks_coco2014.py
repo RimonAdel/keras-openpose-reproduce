@@ -1,6 +1,6 @@
 import sys
-# sys.path.append('../dataset/cocoapi/PythonAPI')
-sys.path.append('/data/dataset/cocoapi/PythonAPI')
+sys.path.append('../dataset/cocoapi/PythonAPI')
+# sys.path.append('/data/dataset/cocoapi/PythonAPI')
 import os
 import cv2
 import numpy as np
@@ -8,9 +8,10 @@ from pycocotools.coco import COCO
 
 def preproc(mode):
     
-    dataset_dir = '/data/dataset'#os.path.abspath(os.path.join(os.path.dirname( __file__ ), '..', 'dataset'))
+    
+    dataset_dir = '/content/keras-openpose-reproduce/dataset/'
 
-    val_anno_path = os.path.join(dataset_dir, "cocoapi/annotations/person_keypoints_%s2014.json" % mode)
+    val_anno_path = os.path.join(dataset_dir, "annotations/person_keypoints_%s2014.json" % mode)
     val_images_dir = os.path.join(dataset_dir, "%s2014" % mode)
     val_masks_dir = os.path.join(dataset_dir, "%smask2014" % mode)
 
@@ -22,7 +23,9 @@ def preproc(mode):
     for i, img_id in enumerate(ids):
         ann_ids = coco.getAnnIds(imgIds=img_id)
         img_anns = coco.loadAnns(ann_ids)
-
+        if (img_id  >= 50000 ):
+            print("skipped",img_id)
+            continue
         img_path = os.path.join(val_images_dir, "COCO_%s2014_%012d.jpg" %(mode,img_id))
         mask_miss_path = os.path.join(val_masks_dir, "mask_miss_%012d.png" % img_id)
         mask_all_path = os.path.join(val_masks_dir, "mask_all_%012d.png" % img_id)

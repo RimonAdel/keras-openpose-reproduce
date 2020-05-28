@@ -12,18 +12,18 @@ class MultiSGD(Optimizer):
     Includes support for momentum,
     learning rate decay, and Nesterov momentum.
     # Arguments
-        lr: float >= 0. Learning rate.
+        learning_rate: float >= 0. Learning rate.
         momentum: float >= 0. Parameter updates momentum.
         decay: float >= 0. Learning rate decay over each update.
         nesterov: boolean. Whether to apply Nesterov momentum.
     """
 
-    def __init__(self, lr=0.01, momentum=0., decay=0.,
+    def __init__(self, learning_rate=0.01, momentum=0., decay=0.,
                  nesterov=False, lr_mult=None, **kwargs):
         super(MultiSGD, self).__init__(**kwargs)
         with K.name_scope(self.__class__.__name__):
             self.iterations = K.variable(0, dtype='int64', name='iterations')
-            self.lr = K.variable(lr, name='lr')
+            self.learning_rate = K.variable(learning_rate, name='learning_rate')
             self.momentum = K.variable(momentum, name='momentum')
             self.decay = K.variable(decay, name='decay')
         self.initial_decay = decay
@@ -35,9 +35,9 @@ class MultiSGD(Optimizer):
         grads = self.get_gradients(loss, params)
         self.updates = [K.update_add(self.iterations, 1)]
 
-        lr = self.lr
+        learning_rate = self.learning_rate
         if self.initial_decay > 0:
-            lr *= (1. / (1. + self.decay * K.cast(self.iterations,
+            learning_rate *= (1. / (1. + self.decay * K.cast(self.iterations,
                                                   K.dtype(self.decay))))
         # momentum
         shapes = [K.int_shape(p) for p in params]
@@ -46,9 +46,9 @@ class MultiSGD(Optimizer):
         for p, g, m in zip(params, grads, moments):
 
             if p.name in self.lr_mult:
-                multiplied_lr = lr * self.lr_mult[p.name]
+                multiplied_lr = learning_rate * self.lr_mult[p.name]
             else:
-                multiplied_lr = lr
+                multiplied_lr = learning_rate
 
             v = self.momentum * m - multiplied_lr * g  # velocity
             self.updates.append(K.update(m, v))
@@ -66,7 +66,7 @@ class MultiSGD(Optimizer):
         return self.updates
 
     def get_config(self):
-        config = {'lr': float(K.get_value(self.lr)),
+        config = {'learning_rate': float(K.get_value(self.learning_rate)),
                   'momentum': float(K.get_value(self.momentum)),
                   'decay': float(K.get_value(self.decay)),
                   'nesterov': self.nesterov}

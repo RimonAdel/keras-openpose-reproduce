@@ -81,7 +81,7 @@ else:
 
     last_epoch = 0
 
-# setup lr multipliers for conv layers
+# setup learning_rate multipliers for conv layers
 lr_mult=dict()
 for layer in model.layers:
 
@@ -120,7 +120,7 @@ train_client = DataIterator("../dataset/train_dataset_2014.h5", shuffle=True, au
 val_client = DataIterator("../dataset/val_dataset_2014.h5", shuffle=False, augment=False, batch_size=batch_size)
 
 train_di = train_client.gen()
-train_samples = 117576
+train_samples = 1999
 val_di = val_client.gen()
 val_samples = 2476
 
@@ -146,8 +146,8 @@ tnan = TerminateOnNaN()
 
 callbacks_list = [lrate, checkpoint, csv_logger, tb, tnan]
 
-# sgd optimizer with lr multipliers
-multisgd = MultiSGD(lr=base_lr, momentum=momentum, decay=0.0, nesterov=False, lr_mult=lr_mult)
+# sgd optimizer with learning_rate multipliers
+multisgd = MultiSGD(learning_rate=base_lr, momentum=momentum, decay=0.0, nesterov=False, lr_mult=lr_mult)
 
 # start training
 

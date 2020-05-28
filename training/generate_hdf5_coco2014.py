@@ -49,6 +49,8 @@ def process():
 
         dataset_count = 0
         for image_index, img_id in enumerate(ids):
+            if (img_id >= 50000):
+                continue
             ann_ids = coco.getAnnIds(imgIds=img_id)
             img_anns = coco.loadAnns(ann_ids)
 
@@ -211,7 +213,9 @@ def writeHDF5():
 
     for count in range(numSample):
         idx = random_order[count]
-
+        if (count >2000):
+            break
+        print(count)
         img_path = data[idx]['img_paths']
         mask_all_path = data[idx]['mask_all_paths']
         mask_miss_path = data[idx]['mask_miss_paths']
