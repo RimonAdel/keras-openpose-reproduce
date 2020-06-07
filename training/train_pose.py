@@ -120,7 +120,7 @@ train_client = DataIterator("../dataset/train_dataset_2014.h5", shuffle=True, au
 val_client = DataIterator("../dataset/val_dataset_2014.h5", shuffle=False, augment=False, batch_size=batch_size)
 
 train_di = train_client.gen()
-train_samples = 1999
+train_samples = 300000
 val_di = val_client.gen()
 val_samples = 2476
 
