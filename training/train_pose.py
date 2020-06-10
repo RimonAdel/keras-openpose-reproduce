@@ -120,7 +120,7 @@ train_client = DataIterator("../dataset/train_dataset_2014.h5", shuffle=True, au
 val_client = DataIterator("../dataset/val_dataset_2014.h5", shuffle=False, augment=False, batch_size=batch_size)
 
 train_di = train_client.gen()
-train_samples = 300000
+train_samples = 30000
 val_di = val_client.gen()
 val_samples = 2476
 
@@ -155,7 +155,7 @@ if use_multiple_gpus is not None:
     from keras.utils import multi_gpu_model
     model = multi_gpu_model(model, gpus=use_multiple_gpus)
 
-model.compile(loss=eucl_loss, optimizer=multisgd)
+model.compile(loss=eucl_loss, optimizer="adam")
 
 
 model.fit_generator(train_di,
