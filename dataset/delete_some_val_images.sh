@@ -9,7 +9,7 @@ do
     name = $name + 0
     echo "remove $file"
 
-    if [ $(($name)) -ge 2014000000000050 ]
+    if [ $(($name)) -ge 2014000000020000 ]
     then  
         echo "remove $file"
         rm $file
