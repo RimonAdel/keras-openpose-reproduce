@@ -112,7 +112,7 @@ for layer in model.layers:
 
 # euclidean loss as implemented in caffe https://github.com/BVLC/caffe/blob/master/src/caffe/layers/euclidean_loss_layer.cpp
 def eucl_loss(x, y):
-    l = K.sum(K.square(x - y)) / batch_size / 2
+    l = K.sum(K.abs(x - y)) / batch_size / 2
     return l
 
 # prepare generators
@@ -155,7 +155,7 @@ if use_multiple_gpus is not None:
     from keras.utils import multi_gpu_model
     model = multi_gpu_model(model, gpus=use_multiple_gpus)
 
-model.compile(loss=eucl_loss, optimizer="adam")
+model.compile(loss=eucl_loss, optimizer=multisgd)
 
 
 model.fit_generator(train_di,
